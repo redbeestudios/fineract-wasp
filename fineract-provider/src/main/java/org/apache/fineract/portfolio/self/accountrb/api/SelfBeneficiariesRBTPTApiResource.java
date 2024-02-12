@@ -94,11 +94,16 @@ public class SelfBeneficiariesRBTPTApiResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @Operation(summary = "Add TPT Beneficiary", description = "Api to add third party beneficiary linked to current user.\n" + "\n"
-            + "Parameter Definitions\n" + "\n" + "name : Nick name for beneficiary, should be unique for an self service user\n" + "\n"
-            + "institutionName : Institution account belongs to (MercadoPago)\n" + "\n" + "accountNumber : Account Number of beneficiary(not id)\n" + "\n"
+            + "Parameter Definitions\n" + "\n"
+            + "name : Nick name for beneficiary, should be unique for an self service user\n" + "\n"
+            + "accountName : Name for beneficiary account\n" + "\n"
+            + "institutionName : Institution account belongs to (MercadoPago)\n" + "\n"
+            + "accountNumber : Account Number of beneficiary(not id)\n" + "\n"
+            + "accountId : Account Id if the beneficiary is on the platform\n" + "\n"
+            + "accountType : Account type \n" + "\n"
             + "transferLimit : Each transfer initiated to this account will not exceed this amount\n" + "\n" + "Example Requests:\n" + "\n"
-            + "/self/beneficiariesrb/tpt\n\n" + "Mandatory Fields: name, officeName, accountNumber, accountType\n\n"
-            + "Optional Fields: transferLimit")
+            + "/self/beneficiariesrb/tpt\n\n" + "Mandatory Fields: name, accountName, accountNumber, accountType, institutionName\n\n"
+            + "Optional Fields: transferLimit, accountId")
     @RequestBody(required = true, content = @Content(schema = @Schema(implementation = SelfBeneficiariesRBTPTApiResourceSwagger.PostSelfBeneficiariesTPTRequest.class)))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = SelfBeneficiariesRBTPTApiResourceSwagger.PostSelfBeneficiariesTPTResponse.class))) })

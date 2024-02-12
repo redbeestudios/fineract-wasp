@@ -49,13 +49,13 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
     @Override
     public Collection<SelfBeneficiariesRBTPTData> retrieveAll() {
         AppUser user = this.context.authenticatedUser();
-        return this.jdbcTemplate.query(this.mapper.schema(), this.mapper, new Object[] { user.getId(), user.getId() });
+        return this.jdbcTemplate.query(this.mapper.schema(), this.mapper, new Object[] { user.getId() });
     }
 
     @Override
     public Collection<SelfAccountRBTemplateData> retrieveTPTSelfAccountTemplateData(AppUser user) {
         return this.jdbcTemplate.query(this.accountTemplateMapper.schema(), this.accountTemplateMapper,
-                new Object[] { user.getId(), user.getId() });
+                new Object[] { user.getId() });
     }
 
     private static final class BeneficiaryMapper implements RowMapper<SelfBeneficiariesRBTPTData> {
@@ -73,7 +73,7 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
             sqlBuilder.append(" b.transfer_limit as transferLimit ");
             sqlBuilder.append(" from m_selfservice_beneficiariesrb_tpt as b ");
             sqlBuilder.append(" where b.is_active = true ");
-            sqlBuilder.append(" and b.account_type = 2 ");
+            sqlBuilder.append(" and b.account_type = 1 ");
             sqlBuilder.append(" and b.app_user_id = ?");
 
             this.schemaSql = sqlBuilder.toString();

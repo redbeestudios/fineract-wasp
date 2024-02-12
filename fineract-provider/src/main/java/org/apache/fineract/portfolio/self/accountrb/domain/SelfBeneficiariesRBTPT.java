@@ -41,11 +41,20 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "office_id", nullable = true)
-    private Long officeId;
+    @Column(name = "account_name", length = 50, nullable = false)
+    private String accountName;
 
-    @Column(name = "client_id", nullable = true)
-    private Long clientId;
+    @Column(name = "institution_name", length = 50, nullable = false)
+    private String institutionName;
+
+    @Column(name = "account_number", length = 50, nullable = false)
+    private String accountNumber;
+
+    //@Column(name = "office_id", nullable = true)
+    //private Long officeId;
+
+    //@Column(name = "client_id", nullable = true)
+    //private Long clientId;
 
     @Column(name = "account_id", nullable = false)
     private Long accountId;
@@ -63,14 +72,21 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
         //
     }
 
-    public SelfBeneficiariesRBTPT(Long appUserId, String name, Long officeId, Long clientId, Long accountId, Integer accountType,
+    public SelfBeneficiariesRBTPT(Long appUserId,
+                                  String name,
+                                  String accountName,
+                                  String accountNumber,
+                                  Long accountId,
+                                  Integer accountType,
+                                  String institutionName,
                                   Long transferLimit) {
         this.appUserId = appUserId;
         this.name = name;
-        this.officeId = officeId;
-        this.clientId = clientId;
+        this.accountName = accountName;
+        this.accountNumber = accountNumber;
         this.accountId = accountId;
         this.accountType = accountType;
+        this.institutionName = institutionName;
         this.transferLimit = transferLimit;
     }
 
@@ -102,12 +118,22 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
         return this.appUserId;
     }
 
-    public Long getOfficeId() {
-        return this.officeId;
+    public String getInstitutionName() { return this.institutionName; }
+
+    //public Long getOfficeId() {
+    //    return this.officeId;
+    //}
+
+    //public Long getClientId() {
+    //    return this.clientId;
+    //}
+
+    public String getAccountNumber() {
+        return this.accountNumber;
     }
 
-    public Long getClientId() {
-        return this.clientId;
+    public String getAccountName() {
+        return this.accountName;
     }
 
     public Long getAccountId() {

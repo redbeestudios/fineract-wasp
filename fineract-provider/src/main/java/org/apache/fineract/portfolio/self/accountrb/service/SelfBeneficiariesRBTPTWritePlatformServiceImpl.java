@@ -63,14 +63,18 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
         String name = (String) params.get(NAME_PARAM_NAME);
         Integer accountType = (Integer) params.get(ACCOUNT_TYPE_PARAM_NAME);
         String accountNumber = (String) params.get(ACCOUNT_NUMBER_PARAM_NAME);
-        String officeName = (String) params.get(OFFICE_NAME_PARAM_NAME);
+        String accountName  = (String) params.get(ACCOUNT_NAME_PARAM_NAME);
+        Long accountId = (Long) params.get(ACCOUNT_ID_PARAM_NAME);
+        //String officeName = (String) params.get(OFFICE_NAME_PARAM_NAME);
+        String institutionName = (String) params.get(INSTITUTION_NAME_PARAM_NAME);
         Long transferLimit = (Long) params.get(TRANSFER_LIMIT_PARAM_NAME);
 
-        Long accountId = null;
+        //Long accountId = null;
         Long clientId = null;
         Long officeId = null;
 
         boolean validAccountDetails = true;
+        /*
         if (accountType.equals(PortfolioAccountType.LOAN.getValue())) {
             Loan loan = this.loanRepositoryWrapper.findNonClosedLoanByAccountNumber(accountNumber);
             if (loan != null && loan.getClientId() != null && loan.getOffice().getName().equals(officeName)) {
@@ -90,11 +94,19 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
                 validAccountDetails = false;
             }
         }
+        */
 
         if (validAccountDetails) {
             try {
                 AppUser user = this.context.authenticatedUser();
-                SelfBeneficiariesRBTPT beneficiary = new SelfBeneficiariesRBTPT(user.getId(), name, officeId, clientId, accountId, accountType,
+                SelfBeneficiariesRBTPT beneficiary = new SelfBeneficiariesRBTPT(
+                        user.getId(),
+                        name,
+                        accountName,
+                        accountNumber,
+                        accountId,
+                        accountType,
+                        institutionName,
                         transferLimit);
                 this.repository.saveAndFlush(beneficiary);
                 return new CommandProcessingResultBuilder().withEntityId(beneficiary.getId()).build();
@@ -102,7 +114,7 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
                 handleDataIntegrityIssues(command, dae);
             }
         }
-        throw new InvalidRBAccountInformationException(officeName, accountNumber, PortfolioAccountType.fromInt(accountType).getCode());
+        throw new InvalidRBAccountInformationException(accountNumber, PortfolioAccountType.fromInt(accountType).getCode());
 
     }
 

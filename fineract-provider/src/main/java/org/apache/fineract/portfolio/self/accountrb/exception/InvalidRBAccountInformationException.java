@@ -26,4 +26,9 @@ public class InvalidRBAccountInformationException extends AbstractPlatformDomain
         super("error.msg.beneficiary.invalid.account.details.with.officeName." + officeName + ".accountNumber." + accountNumber
                 + ".accountType." + accountType, "Invalid Office Name, Account Number, Account Type combination");
     }
+
+    public InvalidRBAccountInformationException(final String accountNumber, final String accountType) {
+        super("error.msg.beneficiary.invalid.account.details.with.accountNumber." + accountNumber
+                + ".accountType." + accountType, "Invalid Office Name, Account Number, Account Type combination");
+    }
 }

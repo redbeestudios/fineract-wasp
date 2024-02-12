@@ -40,8 +40,18 @@ import static org.apache.fineract.portfolio.self.accountrb.api.SelfBeneficiaries
 public class SelfBeneficiariesRBTPTDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
-    private static final Set<String> CREATE_REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(SelfBeneficiariesRBTPTApiConstants.LOCALE,
-            NAME_PARAM_NAME, ACCOUNT_NUMBER_PARAM_NAME, ACCOUNT_TYPE_PARAM_NAME, TRANSFER_LIMIT_PARAM_NAME));
+    private static final Set<String> CREATE_REQUEST_DATA_PARAMETERS =
+            new HashSet<>(
+                    Arrays.asList(SelfBeneficiariesRBTPTApiConstants.LOCALE,
+                    NAME_PARAM_NAME,
+                    ACCOUNT_NUMBER_PARAM_NAME,
+                    ACCOUNT_TYPE_PARAM_NAME,
+                    TRANSFER_LIMIT_PARAM_NAME,
+                    INSTITUTION_NAME_PARAM_NAME,
+                    ACCOUNT_NAME_PARAM_NAME,
+                    ACCOUNT_ID_PARAM_NAME
+                    ));
+
 
     private static final Set<String> UPDATE_REQUEST_DATA_PARAMETERS = new HashSet<>(
             Arrays.asList(NAME_PARAM_NAME, TRANSFER_LIMIT_PARAM_NAME));
@@ -66,11 +76,14 @@ public class SelfBeneficiariesRBTPTDataValidator {
         final String name = this.fromApiJsonHelper.extractStringNamed(NAME_PARAM_NAME, element);
         baseDataValidator.reset().parameter(NAME_PARAM_NAME).value(name).notBlank().notExceedingLengthOf(50);
 
+        final String accountName = this.fromApiJsonHelper.extractStringNamed(ACCOUNT_NAME_PARAM_NAME, element);
+        baseDataValidator.reset().parameter(NAME_PARAM_NAME).value(name).notBlank().notExceedingLengthOf(50);
+
         final String institutionName = this.fromApiJsonHelper.extractStringNamed(INSTITUTION_NAME_PARAM_NAME, element);
         baseDataValidator.reset().parameter(INSTITUTION_NAME_PARAM_NAME).value(institutionName).notBlank().notExceedingLengthOf(50);
 
-        final String accountNo = this.fromApiJsonHelper.extractStringNamed(ACCOUNT_NUMBER_PARAM_NAME, element);
-        baseDataValidator.reset().parameter(ACCOUNT_NUMBER_PARAM_NAME).value(accountNo).notBlank().notExceedingLengthOf(20);
+        final String accountNumber = this.fromApiJsonHelper.extractStringNamed(ACCOUNT_NUMBER_PARAM_NAME, element);
+        baseDataValidator.reset().parameter(ACCOUNT_NUMBER_PARAM_NAME).value(accountNumber).notBlank().notExceedingLengthOf(20);
 
         final Integer accountType = this.fromApiJsonHelper.extractIntegerNamed(ACCOUNT_TYPE_PARAM_NAME, element,
                 this.fromApiJsonHelper.extractLocaleParameter(element.getAsJsonObject()));
@@ -80,14 +93,19 @@ public class SelfBeneficiariesRBTPTDataValidator {
         final Long transferLimit = this.fromApiJsonHelper.extractLongNamed(TRANSFER_LIMIT_PARAM_NAME, element);
         baseDataValidator.reset().parameter(TRANSFER_LIMIT_PARAM_NAME).value(transferLimit).ignoreIfNull().longGreaterThanZero();
 
+        final Long accountId = this.fromApiJsonHelper.extractLongNamed(ACCOUNT_ID_PARAM_NAME, element);
+        baseDataValidator.reset().parameter(TRANSFER_LIMIT_PARAM_NAME).value(transferLimit).ignoreIfNull().longGreaterThanZero();
+
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
 
         HashMap<String, Object> ret = new HashMap<>();
         ret.put(NAME_PARAM_NAME, name);
         ret.put(INSTITUTION_NAME_PARAM_NAME, institutionName);
-        ret.put(ACCOUNT_NUMBER_PARAM_NAME, accountNo);
+        ret.put(ACCOUNT_NUMBER_PARAM_NAME, accountNumber);
+        ret.put(ACCOUNT_NAME_PARAM_NAME, accountName);
         ret.put(ACCOUNT_TYPE_PARAM_NAME, accountType);
         ret.put(TRANSFER_LIMIT_PARAM_NAME, transferLimit);
+        ret.put(ACCOUNT_ID_PARAM_NAME, transferLimit);
 
         return ret;
     }
