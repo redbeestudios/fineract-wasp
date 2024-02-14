@@ -1,0 +1,8 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="fineract" id="1">
+        <addUniqueConstraint columnNames="app_user_id,account_number," constraintName="UNIQUE_ACCOUNT_NUMBER_IN_BENEFICIARIES"
+                             tableName="m_selfservice_beneficiariesrb_tpt"/>
+    </changeSet>
+</databaseChangeLog>
