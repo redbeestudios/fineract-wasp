@@ -99,8 +99,7 @@ public class SelfBeneficiariesRBTPTApiResource {
             + "accountName : Name for beneficiary account\n" + "\n"
             + "institutionName : Institution account belongs to (MercadoPago)\n" + "\n"
             + "accountNumber : Account Number of beneficiary(not id)\n" + "\n"
-            + "accountId : Account Id if the beneficiary is on the platform\n" + "\n"
-            + "accountType : Account type \n" + "\n"
+            + "accountType : Account type (1=Savings) \n" + "\n"
             + "transferLimit : Each transfer initiated to this account will not exceed this amount\n" + "\n" + "Example Requests:\n" + "\n"
             + "/self/beneficiariesrb/tpt\n\n" + "Mandatory Fields: name, accountName, accountNumber, accountType, institutionName\n\n"
             + "Optional Fields: transferLimit, accountId")

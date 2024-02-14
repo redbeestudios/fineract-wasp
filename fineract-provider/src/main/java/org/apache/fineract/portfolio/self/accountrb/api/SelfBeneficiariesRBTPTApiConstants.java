@@ -34,4 +34,6 @@ public interface SelfBeneficiariesRBTPTApiConstants {
     String ID_PARAM_NAME = "id";
     String CLIENT_NAME_PARAM_NAME = "clientName";
     String ACCOUNT_TYPE_OPTIONS_PARAM_NAME = "accountTypeOptions";
+
+    String LOCAL_INSTITUTION_NAME = "LOCAL";
 }

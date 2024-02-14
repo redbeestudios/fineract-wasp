@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.*;
+import static org.apache.fineract.portfolio.self.accountrb.api.SelfBeneficiariesRBTPTApiConstants.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -64,8 +64,7 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
         Integer accountType = (Integer) params.get(ACCOUNT_TYPE_PARAM_NAME);
         String accountNumber = (String) params.get(ACCOUNT_NUMBER_PARAM_NAME);
         String accountName  = (String) params.get(ACCOUNT_NAME_PARAM_NAME);
-        Long accountId = (Long) params.get(ACCOUNT_ID_PARAM_NAME);
-        //String officeName = (String) params.get(OFFICE_NAME_PARAM_NAME);
+        Long accountId = null;
         String institutionName = (String) params.get(INSTITUTION_NAME_PARAM_NAME);
         Long transferLimit = (Long) params.get(TRANSFER_LIMIT_PARAM_NAME);
 
@@ -74,22 +73,24 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
         Long officeId = null;
 
         boolean validAccountDetails = true;
-        /*
-        if (accountType.equals(PortfolioAccountType.LOAN.getValue())) {
+        if (LOCAL_INSTITUTION_NAME.equals(institutionName) &&
+                accountType.equals(PortfolioAccountType.SAVINGS.getValue()) &&
+                accountId != null) {
+            SavingsAccount savings = this.savingRepositoryWrapper.findNonClosedAccountByAccountNumber(accountNumber);
+            if (savings != null && savings.getClient() != null) {
+                accountId = savings.getId();
+                clientId = savings.getClient().getId();
+                officeId = savings.getClient().getOffice().getId();
+            } else {
+                validAccountDetails = false;
+            }
+        }
+        /* else {
             Loan loan = this.loanRepositoryWrapper.findNonClosedLoanByAccountNumber(accountNumber);
             if (loan != null && loan.getClientId() != null && loan.getOffice().getName().equals(officeName)) {
                 accountId = loan.getId();
                 officeId = loan.getOfficeId();
                 clientId = loan.getClientId();
-            } else {
-                validAccountDetails = false;
-            }
-        } else {
-            SavingsAccount savings = this.savingRepositoryWrapper.findNonClosedAccountByAccountNumber(accountNumber);
-            if (savings != null && savings.getClient() != null && savings.getClient().getOffice().getName().equals(officeName)) {
-                accountId = savings.getId();
-                clientId = savings.getClient().getId();
-                officeId = savings.getClient().getOffice().getId();
             } else {
                 validAccountDetails = false;
             }

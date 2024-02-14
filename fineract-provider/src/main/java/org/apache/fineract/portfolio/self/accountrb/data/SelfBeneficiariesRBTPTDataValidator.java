@@ -48,8 +48,7 @@ public class SelfBeneficiariesRBTPTDataValidator {
                     ACCOUNT_TYPE_PARAM_NAME,
                     TRANSFER_LIMIT_PARAM_NAME,
                     INSTITUTION_NAME_PARAM_NAME,
-                    ACCOUNT_NAME_PARAM_NAME,
-                    ACCOUNT_ID_PARAM_NAME
+                    ACCOUNT_NAME_PARAM_NAME
                     ));
 
 

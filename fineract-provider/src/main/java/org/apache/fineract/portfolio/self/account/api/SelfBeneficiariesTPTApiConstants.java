@@ -28,9 +28,6 @@ public interface SelfBeneficiariesTPTApiConstants {
     String ACCOUNT_TYPE_PARAM_NAME = "accountType";
     String ACCOUNT_NUMBER_PARAM_NAME = "accountNumber";
     String TRANSFER_LIMIT_PARAM_NAME = "transferLimit";
-    String ACCOUNT_NAME_PARAM_NAME = "accountName";
-    String INSTITUTION_NAME_PARAM_NAME = "institutionName";
-    String ACCOUNT_ID_PARAM_NAME = "accountId";
 
     String ID_PARAM_NAME = "id";
     String CLIENT_NAME_PARAM_NAME = "clientName";
