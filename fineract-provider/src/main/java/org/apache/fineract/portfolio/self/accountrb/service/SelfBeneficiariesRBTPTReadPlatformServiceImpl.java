@@ -70,7 +70,9 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
             sqlBuilder.append(" b.account_id as accountId, ");
             sqlBuilder.append(" b.account_number as accountNumber, ");
             sqlBuilder.append(" b.institution_name as institutionName, ");
-            sqlBuilder.append(" b.transfer_limit as transferLimit ");
+            sqlBuilder.append(" b.transfer_limit as transferLimit, ");
+            sqlBuilder.append(" b.institution_code as institutionCode, ");
+            sqlBuilder.append(" b.currency_code as currencyCode ");
             sqlBuilder.append(" from m_selfservice_beneficiariesrb_tpt as b ");
             sqlBuilder.append(" where b.is_active = true ");
             sqlBuilder.append(" and b.account_type = 1 ");
@@ -95,6 +97,8 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
             final Integer accountTypeId = rs.getInt("accountType");
             final EnumOptionData accountType = AccountTransferEnumerations.accountType(PortfolioAccountType.fromInt(accountTypeId));
             final Long transferLimit = rs.getLong("transferLimit");
+            final String institutionCode = rs.getString("institutionCode");
+            final String currencyCode = rs.getString("currencyCode");
 
             return new SelfBeneficiariesRBTPTData(id,
                     name,
@@ -103,7 +107,9 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
                     accountNumber,
                     accountId,
                     transferLimit,
-                    institutionName);
+                    institutionName,
+                    institutionCode,
+                    currencyCode);
         }
     }
 

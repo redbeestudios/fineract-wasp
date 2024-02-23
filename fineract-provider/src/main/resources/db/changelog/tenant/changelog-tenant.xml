@@ -152,4 +152,5 @@
     <include file="parts/0130_add_create_delinquency_action_permission.xml" relativeToChangelogFile="true" />
     <include file="parts/1000_create_table_m_selfservice_beneficiariesrb_tpt.xml" relativeToChangelogFile="true" />
     <include file="parts/1001_unique_account_number_m_selfservice_beneficiariesrb_tpt.xml" relativeToChangelogFile="true" />
+    <include file="parts/1002_add_currency_and_bank_code_m_selfservice_beneficiariesrb_tpt.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

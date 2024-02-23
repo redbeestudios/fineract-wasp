@@ -48,7 +48,9 @@ public class SelfBeneficiariesRBTPTDataValidator {
                     ACCOUNT_TYPE_PARAM_NAME,
                     TRANSFER_LIMIT_PARAM_NAME,
                     INSTITUTION_NAME_PARAM_NAME,
-                    ACCOUNT_NAME_PARAM_NAME
+                    ACCOUNT_NAME_PARAM_NAME,
+                    INSTITUTION_CODE_PARAM_NAME,
+                    CURRENCY_CODE_PARAM_NAME
                     ));
 
 
@@ -81,6 +83,12 @@ public class SelfBeneficiariesRBTPTDataValidator {
         final String institutionName = this.fromApiJsonHelper.extractStringNamed(INSTITUTION_NAME_PARAM_NAME, element);
         baseDataValidator.reset().parameter(INSTITUTION_NAME_PARAM_NAME).value(institutionName).notBlank().notExceedingLengthOf(50);
 
+        final String institutionCode = this.fromApiJsonHelper.extractStringNamed(INSTITUTION_CODE_PARAM_NAME, element);
+        baseDataValidator.reset().parameter(INSTITUTION_CODE_PARAM_NAME).value(institutionCode).notBlank().notExceedingLengthOf(3);
+
+        final String currencyCode = this.fromApiJsonHelper.extractStringNamed(CURRENCY_CODE_PARAM_NAME, element);
+        baseDataValidator.reset().parameter(CURRENCY_CODE_PARAM_NAME).value(currencyCode).notBlank().notExceedingLengthOf(3);
+
         final String accountNumber = this.fromApiJsonHelper.extractStringNamed(ACCOUNT_NUMBER_PARAM_NAME, element);
         baseDataValidator.reset().parameter(ACCOUNT_NUMBER_PARAM_NAME).value(accountNumber).notBlank().notExceedingLengthOf(20);
 
@@ -105,6 +113,8 @@ public class SelfBeneficiariesRBTPTDataValidator {
         ret.put(ACCOUNT_TYPE_PARAM_NAME, accountType);
         ret.put(TRANSFER_LIMIT_PARAM_NAME, transferLimit);
         ret.put(ACCOUNT_ID_PARAM_NAME, transferLimit);
+        ret.put(CURRENCY_CODE_PARAM_NAME, currencyCode);
+        ret.put(INSTITUTION_CODE_PARAM_NAME, institutionCode);
 
         return ret;
     }

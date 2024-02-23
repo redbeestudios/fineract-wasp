@@ -25,15 +25,18 @@ public interface SelfBeneficiariesRBTPTApiConstants {
     String LOCALE = "locale";
     String NAME_PARAM_NAME = "name";
     String INSTITUTION_NAME_PARAM_NAME = "institutionName";
+    String INSTITUTION_CODE_PARAM_NAME = "institutionCode";
     String ACCOUNT_TYPE_PARAM_NAME = "accountType";
     String ACCOUNT_NUMBER_PARAM_NAME = "accountNumber";
     String ACCOUNT_NAME_PARAM_NAME = "accountName";
     String ACCOUNT_ID_PARAM_NAME = "accountId";
     String TRANSFER_LIMIT_PARAM_NAME = "transferLimit";
 
+    String CURRENCY_CODE_PARAM_NAME = "currencyCode";
     String ID_PARAM_NAME = "id";
     String CLIENT_NAME_PARAM_NAME = "clientName";
     String ACCOUNT_TYPE_OPTIONS_PARAM_NAME = "accountTypeOptions";
+
 
     String LOCAL_INSTITUTION_NAME = "LOCAL";
 }

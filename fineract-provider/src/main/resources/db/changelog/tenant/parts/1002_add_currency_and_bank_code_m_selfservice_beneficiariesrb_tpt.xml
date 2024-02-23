@@ -1,0 +1,17 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="1" author="fineract">
+        <addColumn tableName="m_selfservice_beneficiariesrb_tpt">
+            <column name="currency_code" type="VARCHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2" author="fineract">
+        <addColumn tableName="m_selfservice_beneficiariesrb_tpt">
+            <column name="institution_code" type="VARCHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

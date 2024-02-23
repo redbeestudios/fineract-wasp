@@ -65,6 +65,7 @@ public class SelfBeneficiariesRBTPTApiResource {
     private final SelfBeneficiariesRBTPTReadPlatformService readPlatformService;
     private static final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(Arrays.asList(
             SelfBeneficiariesRBTPTApiConstants.NAME_PARAM_NAME, SelfBeneficiariesRBTPTApiConstants.INSTITUTION_NAME_PARAM_NAME,
+            SelfBeneficiariesRBTPTApiConstants.INSTITUTION_CODE_PARAM_NAME, SelfBeneficiariesRBTPTApiConstants.CURRENCY_CODE_PARAM_NAME,
             SelfBeneficiariesRBTPTApiConstants.ACCOUNT_NUMBER_PARAM_NAME, SelfBeneficiariesRBTPTApiConstants.ACCOUNT_TYPE_PARAM_NAME,
             SelfBeneficiariesRBTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME, SelfBeneficiariesRBTPTApiConstants.ID_PARAM_NAME,
             SelfBeneficiariesRBTPTApiConstants.CLIENT_NAME_PARAM_NAME, SelfBeneficiariesRBTPTApiConstants.ACCOUNT_TYPE_OPTIONS_PARAM_NAME));

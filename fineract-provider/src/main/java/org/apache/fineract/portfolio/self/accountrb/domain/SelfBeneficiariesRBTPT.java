@@ -47,6 +47,12 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
     @Column(name = "institution_name", length = 50, nullable = false)
     private String institutionName;
 
+    @Column(name = "institution_code", length = 3, nullable = true)
+    private String institutionCode;
+
+    @Column(name = "currency_code", length = 3, nullable = true)
+    private String currencyCode;
+
     @Column(name = "account_number", length = 50, nullable = false)
     private String accountNumber;
 
@@ -79,7 +85,9 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
                                   Long accountId,
                                   Integer accountType,
                                   String institutionName,
-                                  Long transferLimit) {
+                                  Long transferLimit,
+                                  String institutionCode,
+                                  String currencyCode) {
         this.appUserId = appUserId;
         this.name = name;
         this.accountName = accountName;
@@ -88,6 +96,8 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
         this.accountType = accountType;
         this.institutionName = institutionName;
         this.transferLimit = transferLimit;
+        this.institutionCode = institutionCode;
+        this.currencyCode = currencyCode;
     }
 
     public String getName() {
@@ -119,6 +129,14 @@ public class SelfBeneficiariesRBTPT extends AbstractPersistableCustom {
     }
 
     public String getInstitutionName() { return this.institutionName; }
+
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
 
     //public Long getOfficeId() {
     //    return this.officeId;

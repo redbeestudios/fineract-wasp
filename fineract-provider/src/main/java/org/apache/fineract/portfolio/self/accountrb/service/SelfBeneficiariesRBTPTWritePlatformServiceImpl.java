@@ -66,6 +66,8 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
         String accountName  = (String) params.get(ACCOUNT_NAME_PARAM_NAME);
         Long accountId = null;
         String institutionName = (String) params.get(INSTITUTION_NAME_PARAM_NAME);
+        String institutionCode = (String) params.get(INSTITUTION_CODE_PARAM_NAME);
+        String currencyCode = (String) params.get(CURRENCY_CODE_PARAM_NAME);
         Long transferLimit = (Long) params.get(TRANSFER_LIMIT_PARAM_NAME);
 
         //Long accountId = null;
@@ -108,7 +110,9 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
                         accountId,
                         accountType,
                         institutionName,
-                        transferLimit);
+                        transferLimit,
+                        institutionCode,
+                        currencyCode);
                 this.repository.saveAndFlush(beneficiary);
                 return new CommandProcessingResultBuilder().withEntityId(beneficiary.getId()).build();
             } catch (DataAccessException dae) {

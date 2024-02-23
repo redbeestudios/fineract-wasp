@@ -42,6 +42,8 @@ public class SelfBeneficiariesRBTPTData {
     @SuppressWarnings("unused")
     private final String institutionName;
     @SuppressWarnings("unused")
+    private final String institutionCode;
+    private final String currencyCode;
     private final Collection<EnumOptionData> accountTypeOptions;
 
     public SelfBeneficiariesRBTPTData(final Collection<EnumOptionData> accountTypeOptions) {
@@ -54,6 +56,8 @@ public class SelfBeneficiariesRBTPTData {
         this.accountType = null;
         this.accountNumber = null;
         this.transferLimit = null;
+        this.institutionCode = null;
+        this.currencyCode = null;
     }
 
     public SelfBeneficiariesRBTPTData(final Long id,
@@ -63,7 +67,9 @@ public class SelfBeneficiariesRBTPTData {
                                       final String accountNumber,
                                       final Long accountId,
                                       final Long transferLimit,
-                                      final String institutionName) {
+                                      final String institutionName,
+                                      final String institutionCode,
+                                      final String currencyCode) {
         this.accountTypeOptions = null;
         this.id = id;
         this.name = name;
@@ -73,5 +79,7 @@ public class SelfBeneficiariesRBTPTData {
         this.accountNumber = accountNumber;
         this.transferLimit = transferLimit;
         this.accountId = accountId;
+        this.institutionCode = institutionCode;
+        this.currencyCode = currencyCode;
     }
 }
