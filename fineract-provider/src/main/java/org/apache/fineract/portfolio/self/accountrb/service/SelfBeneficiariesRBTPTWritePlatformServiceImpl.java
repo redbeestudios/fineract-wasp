@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.accountrb.service;
 
+import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -25,6 +26,7 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.ErrorHandler;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
@@ -41,6 +43,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.fineract.portfolio.self.accountrb.api.SelfBeneficiariesRBTPTApiConstants.*;
@@ -54,6 +57,7 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
     private final SelfBeneficiariesRBTPTDataValidator validator;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final SavingsAccountRepositoryWrapper savingRepositoryWrapper;
+    private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
 
     @Transactional
     @Override
@@ -99,6 +103,13 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
         }
         */
 
+        // Check if account is local
+        //
+        List<JsonObject> internalAccount = readWriteNonCoreDataService.queryDataTable("e_cvu", "cvu_e_number", accountNumber, "savings_account_id");
+        if (internalAccount.size() > 0) {
+            accountId = internalAccount.get(0).get("savings_account_id").getAsLong();
+        }
+
         if (validAccountDetails) {
             try {
                 AppUser user = this.context.authenticatedUser();
@@ -120,7 +131,6 @@ public class SelfBeneficiariesRBTPTWritePlatformServiceImpl implements SelfBenef
             }
         }
         throw new InvalidRBAccountInformationException(accountNumber, PortfolioAccountType.fromInt(accountType).getCode());
-
     }
 
     @Transactional

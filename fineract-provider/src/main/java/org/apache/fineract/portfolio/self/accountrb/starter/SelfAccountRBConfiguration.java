@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.accountrb.starter;
 
+import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
@@ -48,9 +49,10 @@ public class SelfAccountRBConfiguration {
     @Bean
     @ConditionalOnMissingBean(SelfBeneficiariesRBTPTWritePlatformService.class)
     public SelfBeneficiariesRBTPTWritePlatformService selfBeneficiariesRBTPTWritePlatformService(PlatformSecurityContext context,
-                                                                                               SelfBeneficiariesRBTPTRepository repository, SelfBeneficiariesRBTPTDataValidator validator,
-                                                                                               LoanRepositoryWrapper loanRepositoryWrapper, SavingsAccountRepositoryWrapper savingRepositoryWrapper) {
+                                                                                                 SelfBeneficiariesRBTPTRepository repository, SelfBeneficiariesRBTPTDataValidator validator,
+                                                                                                 LoanRepositoryWrapper loanRepositoryWrapper, SavingsAccountRepositoryWrapper savingRepositoryWrapper,
+                                                                                                 ReadWriteNonCoreDataService readWriteNonCoreDataService) {
         return new SelfBeneficiariesRBTPTWritePlatformServiceImpl(context, repository, validator, loanRepositoryWrapper,
-                savingRepositoryWrapper);
+                savingRepositoryWrapper, readWriteNonCoreDataService);
     }
 }

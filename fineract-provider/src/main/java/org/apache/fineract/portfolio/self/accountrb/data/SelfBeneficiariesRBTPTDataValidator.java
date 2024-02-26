@@ -90,7 +90,7 @@ public class SelfBeneficiariesRBTPTDataValidator {
         baseDataValidator.reset().parameter(CURRENCY_CODE_PARAM_NAME).value(currencyCode).notBlank().notExceedingLengthOf(3);
 
         final String accountNumber = this.fromApiJsonHelper.extractStringNamed(ACCOUNT_NUMBER_PARAM_NAME, element);
-        baseDataValidator.reset().parameter(ACCOUNT_NUMBER_PARAM_NAME).value(accountNumber).notBlank().notExceedingLengthOf(20);
+        baseDataValidator.reset().parameter(ACCOUNT_NUMBER_PARAM_NAME).value(accountNumber).notBlank().notExceedingLengthOf(22);
 
         final Integer accountType = this.fromApiJsonHelper.extractIntegerNamed(ACCOUNT_TYPE_PARAM_NAME, element,
                 this.fromApiJsonHelper.extractLocaleParameter(element.getAsJsonObject()));

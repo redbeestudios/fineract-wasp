@@ -66,6 +66,12 @@ final class SelfBeneficiariesRBTPTApiResourceSwagger {
         @Schema(example = "Mercado Pago")
         public String institutionName;
 
+        @Schema(example = "123")
+        public String institutionCode;
+
+        @Schema(example = "ARS")
+        public String currencyCode;
+
         @Schema(example = "1")
         public Integer accountType;
 

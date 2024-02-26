@@ -99,11 +99,13 @@ public class SelfBeneficiariesRBTPTApiResource {
             + "name : Nick name for beneficiary, should be unique for an self service user\n" + "\n"
             + "accountName : Name for beneficiary account\n" + "\n"
             + "institutionName : Institution account belongs to (MercadoPago)\n" + "\n"
+            + "institutionCode : Institution account belongs to (1234)\n" + "\n"
             + "accountNumber : Account Number of beneficiary(not id)\n" + "\n"
             + "accountType : Account type (1=Savings) \n" + "\n"
+            + "currencyCode : Currency 3 letter code"
             + "transferLimit : Each transfer initiated to this account will not exceed this amount\n" + "\n" + "Example Requests:\n" + "\n"
-            + "/self/beneficiariesrb/tpt\n\n" + "Mandatory Fields: name, accountName, accountNumber, accountType, institutionName\n\n"
-            + "Optional Fields: transferLimit, accountId")
+            + "/self/beneficiariesrb/tpt\n\n" + "Mandatory Fields: name, accountName, accountNumber, accountType, institutionName, institutionCode, currencyCode\n\n"
+            + "Optional Fields: transferLimit")
     @RequestBody(required = true, content = @Content(schema = @Schema(implementation = SelfBeneficiariesRBTPTApiResourceSwagger.PostSelfBeneficiariesTPTRequest.class)))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = SelfBeneficiariesRBTPTApiResourceSwagger.PostSelfBeneficiariesTPTResponse.class))) })
