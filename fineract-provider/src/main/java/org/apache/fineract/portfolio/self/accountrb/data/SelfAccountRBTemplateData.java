@@ -35,6 +35,8 @@ public class SelfAccountRBTemplateData implements Comparable<SelfAccountRBTempla
     private final Long officeId;
     private final String officeName;
 
+    private final String accountNumber;
+
     public SelfAccountRBTemplateData(final Long accountId, final String accountNo, final Integer accountType, final Long clientId,
                                      final String clientName, final Long officeId, final String officeName) {
         this.accountId = accountId;
@@ -44,6 +46,19 @@ public class SelfAccountRBTemplateData implements Comparable<SelfAccountRBTempla
         this.clientName = clientName;
         this.officeId = officeId;
         this.officeName = officeName;
+        this.accountNumber = null;
+    }
+
+    public SelfAccountRBTemplateData(final Long accountId, final String accountNo, final Integer accountType, final Long clientId,
+                                     final String clientName, final Long officeId, final String officeName, final String accountNumber) {
+        this.accountId = accountId;
+        this.accountNo = accountNo;
+        this.accountType = AccountTransferEnumerations.accountType(accountType);
+        this.clientId = clientId;
+        this.clientName = clientName;
+        this.officeId = officeId;
+        this.officeName = officeName;
+        this.accountNumber = accountNumber;
     }
 
     public SelfAccountRBTemplateData(final Long accountId, final Integer accountType, final Long clientId, final Long officeId) {
@@ -54,6 +69,18 @@ public class SelfAccountRBTemplateData implements Comparable<SelfAccountRBTempla
         this.clientName = null;
         this.officeId = officeId;
         this.officeName = null;
+        this.accountNumber = null;
+    }
+
+    public SelfAccountRBTemplateData(final Long accountId, final Integer accountType, final Long clientId, final Long officeId, final String accountNumber) {
+        this.accountId = accountId;
+        this.accountNo = null;
+        this.accountType = AccountTransferEnumerations.accountType(accountType);
+        this.clientId = clientId;
+        this.clientName = null;
+        this.officeId = officeId;
+        this.officeName = null;
+        this.accountNumber = accountNumber;
     }
 
     @Override
@@ -106,5 +133,15 @@ public class SelfAccountRBTemplateData implements Comparable<SelfAccountRBTempla
     public Integer getAccountType() {
         return this.accountType.getId().intValue();
     }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public Long getOfficeId() {
+        return officeId;
+    }
+
+    public String getAccountNumber() { return accountNumber; }
 
 }

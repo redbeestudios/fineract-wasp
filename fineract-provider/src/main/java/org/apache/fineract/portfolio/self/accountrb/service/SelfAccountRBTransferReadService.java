@@ -27,4 +27,5 @@ public interface SelfAccountRBTransferReadService {
 
     Collection<SelfAccountRBTemplateData> retrieveSelfAccountTemplateData(AppUser user);
 
+    Collection<SelfAccountRBTemplateData> retrieveDestAccountTemplateData(Long accountId);
 }

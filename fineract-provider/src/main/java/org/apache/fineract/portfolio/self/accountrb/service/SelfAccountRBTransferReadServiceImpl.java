@@ -42,13 +42,8 @@ public class SelfAccountRBTransferReadServiceImpl implements SelfAccountRBTransf
                 .append("inner join m_selfservice_user_client_mapping as map on u.id = map.appuser_id ")
                 .append("inner join m_client as c on map.client_id = c.id ").append("inner join m_office as o on c.office_id = o.id ")
                 .append("inner join m_savings_account as s on s.client_id = c.id ").append("where u.id = ? ")
-                .append("and s.status_enum = 300 ").append("union ").append("select l.id as accountId, ")
-                .append("l.account_no as accountNo, ").append("1 as accountType, ").append("c.id as clientId, ")
-                .append("c.display_name as clientName, ").append("o.id as officeId, ").append("o.name as officeName ")
-                .append("from m_appuser as u ").append("inner join m_selfservice_user_client_mapping as map on u.id = map.appuser_id ")
-                .append("inner join m_client as c on map.client_id = c.id ").append("inner join m_office as o on c.office_id = o.id ")
-                .append("inner join m_loan as l on l.client_id = c.id ").append("where u.id = ? ").append("and l.loan_status_id = 300 ");
-        return this.jdbcTemplate.query(sql.toString(), mapper, new Object[] { user.getId(), user.getId() });
+                .append("and s.status_enum = 300 ");
+        return this.jdbcTemplate.query(sql.toString(), mapper, new Object[] { user.getId()});
     }
 
     private static final class SelfAccountTemplateMapper implements RowMapper<SelfAccountRBTemplateData> {
@@ -63,8 +58,22 @@ public class SelfAccountRBTransferReadServiceImpl implements SelfAccountRBTransf
             final Long officeId = rs.getLong("officeId");
             final String officeName = rs.getString("officeName");
 
-            return null; //new SelfAccountRBTemplateData(accountId, accountNo, accountType, clientId, clientName, officeId, officeName);
+            return new SelfAccountRBTemplateData(accountId, accountNo, accountType, clientId, clientName, officeId, officeName);
         }
     }
+
+    @Override
+    public Collection<SelfAccountRBTemplateData> retrieveDestAccountTemplateData(Long accountId) {
+        SelfAccountTemplateMapper mapper = new SelfAccountTemplateMapper();
+        StringBuilder sql = new StringBuilder().append("select s.id as accountId, ").append("s.account_no as accountNo, ")
+                .append("2 as accountType, ").append("c.id as clientId, ").append("c.display_name as clientName, ")
+                .append("o.id as officeId, ").append("o.name as officeName ").append("from m_appuser as u ")
+                .append("inner join m_selfservice_user_client_mapping as map on u.id = map.appuser_id ")
+                .append("inner join m_client as c on map.client_id = c.id ").append("inner join m_office as o on c.office_id = o.id ")
+                .append("inner join m_savings_account as s on s.client_id = c.id ").append("where s.id = ? ")
+                .append("and s.status_enum = 300 ");
+        return this.jdbcTemplate.query(sql.toString(), mapper, new Object[] { accountId });
+    }
+
 
 }

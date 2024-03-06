@@ -34,10 +34,12 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.*;
 
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.*;
+import static org.apache.fineract.portfolio.search.SearchConstants.API_PARAM_COLUMN;
 
 @Component
 public class SelfAccountRBTransferDataValidator {
@@ -68,40 +70,6 @@ public class SelfAccountRBTransferDataValidator {
         final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors)
                 .resource(ACCOUNT_TRANSFER_RESOURCE_NAME);
 
-        final Long fromOfficeId = this.fromApiJsonHelper.extractLongNamed(fromOfficeIdParamName, element);
-        baseDataValidator.reset().parameter(fromOfficeIdParamName).value(fromOfficeId).notNull().integerGreaterThanZero();
-
-        final Long fromClientId = this.fromApiJsonHelper.extractLongNamed(fromClientIdParamName, element);
-        baseDataValidator.reset().parameter(fromClientIdParamName).value(fromClientId).notNull().integerGreaterThanZero();
-
-        final Long fromAccountId = this.fromApiJsonHelper.extractLongNamed(fromAccountIdParamName, element);
-        baseDataValidator.reset().parameter(fromAccountIdParamName).value(fromAccountId).notNull().integerGreaterThanZero();
-
-        final Integer fromAccountType = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(fromAccountTypeParamName, element);
-        baseDataValidator.reset().parameter(fromAccountTypeParamName).value(fromAccountType).notNull()
-                .isOneOfTheseValues(Integer.valueOf(1), Integer.valueOf(2));
-
-        final Long toOfficeId = this.fromApiJsonHelper.extractLongNamed(toOfficeIdParamName, element);
-        baseDataValidator.reset().parameter(toOfficeIdParamName).value(toOfficeId).notNull().integerGreaterThanZero();
-
-        final Long toClientId = this.fromApiJsonHelper.extractLongNamed(toClientIdParamName, element);
-        baseDataValidator.reset().parameter(toClientIdParamName).value(toClientId).notNull().integerGreaterThanZero();
-
-        final Long toAccountId = this.fromApiJsonHelper.extractLongNamed(toAccountIdParamName, element);
-        baseDataValidator.reset().parameter(toAccountIdParamName).value(toAccountId).notNull().integerGreaterThanZero();
-
-        final Integer toAccountType = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(toAccountTypeParamName, element);
-        baseDataValidator.reset().parameter(toAccountTypeParamName).value(toAccountType).notNull().isOneOfTheseValues(Integer.valueOf(1),
-                Integer.valueOf(2));
-
-        if (fromAccountType != null && fromAccountType == 1 && toAccountType != null && toAccountType == 1) {
-            baseDataValidator.reset().failWithCode("loan.to.loan.transfer.not.allowed",
-                    "Cannot transfer from Loan account to another Loan account.");
-        }
-
-        final LocalDate transactionDate = this.fromApiJsonHelper.extractLocalDateNamed(transferDateParamName, element);
-        baseDataValidator.reset().parameter(transferDateParamName).value(transactionDate).notNull();
-
         final BigDecimal transactionAmount = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(transferAmountParamName, element);
         baseDataValidator.reset().parameter(transferAmountParamName).value(transactionAmount).notNull().positiveAmount();
 
@@ -109,19 +77,75 @@ public class SelfAccountRBTransferDataValidator {
         baseDataValidator.reset().parameter(transferDescriptionParamName).value(transactionDescription).notBlank()
                 .notExceedingLengthOf(200);
 
+        final String toAccountNumber = this.fromApiJsonHelper.extractStringNamed("toAccountNumber", element);
+        baseDataValidator.reset().parameter(transferDescriptionParamName).value(transactionDescription).notBlank()
+                .notExceedingLengthOf(22);
+
+//        final Integer fromAccountType = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(fromAccountTypeParamName, element);
+//        baseDataValidator.reset().parameter(fromAccountTypeParamName).value(fromAccountType).notNull()
+//                .isOneOfTheseValues(Integer.valueOf(1), Integer.valueOf(2));
+
+//        final LocalDate transactionDate = this.fromApiJsonHelper.extractLocalDateNamed(transferDateParamName, element);
+//        baseDataValidator.reset().parameter(transferDateParamName).value(transactionDate).notNull();
+
+        AppUser user = this.context.authenticatedUser();
+        Collection<SelfAccountRBTemplateData> validFromAccounts = this.selfAccountRBTransferReadService.retrieveSelfAccountTemplateData(user);
+        if (validFromAccounts.size() != 1) {
+            dataValidationErrors.add(ApiParameterError.generalError("account.not.found", "User should have only one account, has: " + validFromAccounts.size()));
+            throw new PlatformApiDataValidationException(dataValidationErrors);
+        }
+        Collection<SelfAccountRBTemplateData> validToAccounts = validFromAccounts;
+        if (type.equals("tpt")) {
+            validToAccounts = this.tptBeneficiaryReadPlatformService.retrieveTPTSelfAccountTemplateData(user);
+        }
+
+        Iterator<SelfAccountRBTemplateData> iterator = validFromAccounts.iterator();
+        SelfAccountRBTemplateData fromAccountTD = iterator.next();
+
+        // Find destination account
+        // Can be local (has accountId setted) or external (accountId is null)
+        SelfAccountRBTemplateData validToAccount = null;
+        for (SelfAccountRBTemplateData toAccount : validToAccounts) {
+            if (toAccountNumber.equals(toAccount.getAccountNumber()) && toAccount.getAccountId() != null) {
+                validToAccount = toAccount;
+                break;
+            }
+        }
+
+        if (validToAccount == null) {
+            dataValidationErrors.add(ApiParameterError.parameterError("invalid.to.account.details", "toAccount is not internal, external accounts not implemented yet", "toAccount"));
+        }
+
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
 
-        SelfAccountRBTemplateData fromAccount = new SelfAccountRBTemplateData(fromAccountId, fromAccountType, fromClientId, fromOfficeId);
-        SelfAccountRBTemplateData toAccount = new SelfAccountRBTemplateData(toAccountId, toAccountType, toClientId, toOfficeId);
+        SelfAccountRBTemplateData fromAccount = new SelfAccountRBTemplateData(fromAccountTD.getAccountId(), fromAccountTD.getAccountType(), fromAccountTD.getClientId(), fromAccountTD.getOfficeId());
+        SelfAccountRBTemplateData toAccount = validToAccount; //new SelfAccountRBTemplateData(toAccountId, toAccountType, toClientId, toOfficeId);
 
         validateUserAccounts(fromAccount, toAccount, baseDataValidator, type);
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
 
+        LocalDate ld = LocalDate.now();
+        String date = ld.getDayOfMonth() + " " + ld.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + ld.getYear();
+
         Map<String, Object> ret = new HashMap<>();
         ret.put("fromAccount", fromAccount);
         ret.put("toAccount", toAccount);
-        ret.put("transactionDate", transactionDate);
+        ret.put("transactionDate", LocalDate.now());
         ret.put("transactionAmount", transactionAmount);
+
+
+        ret.put("toOfficeId", toAccount.getOfficeId());
+        ret.put("toClientId", toAccount.getClientId());
+        ret.put("toAccountType", toAccount.getAccountType());
+        ret.put("toAccountId", toAccount.getAccountId());
+        ret.put("transferAmount", transactionAmount);
+        ret.put("transferDate", date);
+        ret.put("transferDescription", transactionDescription);
+        ret.put("dateFormat", "dd MMMM yyyy");
+        ret.put("fromAccountId", fromAccount.getAccountId());
+        ret.put("fromAccountType", fromAccount.getAccountType());
+        ret.put("fromClientId", fromAccount.getClientId());
+        ret.put("fromOfficeId", fromAccount.getOfficeId());
 
         return ret;
 

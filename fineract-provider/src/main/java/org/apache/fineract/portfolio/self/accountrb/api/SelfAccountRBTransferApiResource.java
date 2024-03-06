@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.accountrb.api;
 
+import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -53,7 +54,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
-@Path("/v1/self/accounttransfersRB")
+@Path("/v1/self/accounttransfersrb")
 @Component
 @Tag(name = "Self Account transfer", description = "")
 @RequiredArgsConstructor
@@ -106,7 +107,29 @@ public class SelfAccountRBTransferApiResource {
         if (type.equals("tpt")) {
             checkForLimits(params);
         }
-        return this.accountTransfersApiResource.create(apiRequestBodyAsJson);
+        String jsonRequest = generateCompatibleJson(params);
+        return this.accountTransfersApiResource.create(jsonRequest);
+    }
+
+    private String generateCompatibleJson(Map<String, Object> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"toOfficeId\": " + params.get("toOfficeId") + ", ");
+        sb.append("\"toClientId\": " + params.get("toClientId") + ", ");
+        sb.append("\"toAccountType\": " + params.get("toAccountType") + ", ");
+        sb.append("\"toAccountId\": " + params.get("toAccountId") + ", ");
+        sb.append("\"transferAmount\": " + params.get("transferAmount") + ", ");
+        sb.append("\"transferDate\": " + "\"" + params.get("transferDate") + "\"" + ", ");
+        sb.append("\"transferDescription\": " + "\"" + params.get("transferDescription") + "\"" + ", ");
+        sb.append("\"dateFormat\": " + "\"" + params.get("dateFormat") + "\"" + ", ");
+        sb.append("\"locale\": \"en\", ");
+        sb.append("\"fromAccountId\": " + params.get("fromAccountId") + ", ");
+        sb.append("\"fromAccountType\": " + params.get("fromAccountType") + ", ");
+        sb.append("\"fromClientId\": " + params.get("fromClientId") + ", ");
+        sb.append("\"fromOfficeId\": " + params.get("fromOfficeId") + " ");
+        sb.append("}");
+
+        return sb.toString();
     }
 
     private void checkForLimits(Map<String, Object> params) {

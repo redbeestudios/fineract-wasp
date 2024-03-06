@@ -22,6 +22,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.service.AccountTransferEnumerations;
+import org.apache.fineract.portfolio.self.account.data.SelfAccountTemplateData;
 import org.apache.fineract.portfolio.self.accountrb.data.SelfAccountRBTemplateData;
 import org.apache.fineract.portfolio.self.accountrb.data.SelfBeneficiariesRBTPTData;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -75,7 +76,7 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
             sqlBuilder.append(" b.currency_code as currencyCode ");
             sqlBuilder.append(" from m_selfservice_beneficiariesrb_tpt as b ");
             sqlBuilder.append(" where b.is_active = true ");
-            sqlBuilder.append(" and b.account_type = 1 ");
+            sqlBuilder.append(" and b.account_type = 2 ");
             sqlBuilder.append(" and b.app_user_id = ?");
 
             this.schemaSql = sqlBuilder.toString();
@@ -118,11 +119,22 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
         private final String schemaSql;
 
         AccountTemplateMapper() {
-            final StringBuilder sqlBuilder = new StringBuilder("b.account_type as accountType, ");
+
+            final StringBuilder sqlBuilder = new StringBuilder("select o.name as officeName, ");
+            sqlBuilder.append(" b.account_number as accountNumber, ");
+            sqlBuilder.append(" o.id as officeId, ");
+            sqlBuilder.append(" c.display_name as clientName, ");
+            sqlBuilder.append(" c.id as clientId, ");
+            sqlBuilder.append(" b.account_type as accountType, ");
+            sqlBuilder.append(" s.account_no  as accountNo, ");
+            sqlBuilder.append(" s.id as accountId ");
             sqlBuilder.append(" from m_selfservice_beneficiariesrb_tpt as b ");
+            sqlBuilder.append(" left join m_savings_account as s on b.account_id = s.id ");
+            sqlBuilder.append(" left join m_client as c on s.client_id = c.id ");
+            sqlBuilder.append(" left join m_office as o on c.office_id = o.id ");
             sqlBuilder.append(" where b.is_active = true ");
             sqlBuilder.append(" and b.account_type = 2 ");
-            sqlBuilder.append(" and b.app_user_id = ?");
+            sqlBuilder.append(" and b.app_user_id = ? ");
 
             this.schemaSql = sqlBuilder.toString();
         }
@@ -134,15 +146,16 @@ public class SelfBeneficiariesRBTPTReadPlatformServiceImpl implements SelfBenefi
         @Override
         public SelfAccountRBTemplateData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
 
-            final String officeName = "dummy"; // rs.getString("officeName");
-            final Long officeId = 0l; //rs.getLong("officeId");
-            final String clientName = "dummy"; //rs.getString("clientName");
-            final Long clientId = 0l; //rs.getLong("clientId");
+            final String officeName = rs.getString("officeName");
+            final Long officeId = rs.getLong("officeId");
+            final String clientName = rs.getString("clientName");
+            final Long clientId = rs.getLong("clientId");
             final Integer accountTypeId = rs.getInt("accountType");
-            final String accountNumber = "0123"; // rs.getString("accountNumber");
-            final Long accountId = 0l; //rs.getLong("accountId");
+            final String accountNumber = rs.getString("accountNumber");
+            final Long accountId = rs.getLong("accountId");
+            final String accountNo = rs.getString("accountNo");
 
-            return new SelfAccountRBTemplateData(accountId, accountNumber, accountTypeId, clientId, clientName, officeId, officeName);
+            return new SelfAccountRBTemplateData(accountId, accountNo, accountTypeId, clientId, clientName, officeId, officeName, accountNumber);
         }
     }
 
